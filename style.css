@@ -25,7 +25,8 @@ body {
 
 /* Hero Section */
 .hero {
-  background: linear-gradient(
+  background:
+    linear-gradient(
       135deg,
       rgba(0, 153, 219, 0.9) 0%,
       rgba(0, 104, 181, 0.9) 50%,
@@ -258,6 +259,25 @@ button .fas {
   color: #003c71;
 }
 
+.celebration-message {
+  margin-bottom: 15px;
+  padding: 18px 20px;
+  border: 2px solid #00a86b;
+  border-radius: 8px;
+  background-color: #ecfdf3;
+  color: #14532d;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.celebration-message .fas {
+  color: #b7791f;
+}
+
+.celebration-message strong {
+  color: #0071c5;
+}
+
 /* Counter */
 #attendeeCount {
   color: #0071c5;
@@ -348,6 +368,86 @@ select {
   color: #475569;
 }
 
+.attendee-roster {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.attendee-roster-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.attendee-roster-header h4 {
+  color: #475569;
+  font-size: 16px;
+}
+
+#attendeeListCount {
+  color: #64748b;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.attendee-table-wrapper {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.attendee-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.attendee-table th,
+.attendee-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.attendee-table th {
+  background-color: #f8fafc;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.attendee-table td {
+  color: #334155;
+  font-size: 15px;
+}
+
+.attendee-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.team-label {
+  font-weight: 600;
+}
+
+.team-label.water {
+  color: #0071c5;
+}
+
+.team-label.zero {
+  color: #18794e;
+}
+
+.team-label.power {
+  color: #b45309;
+}
+
+.empty-attendee-list {
+  color: #64748b !important;
+  text-align: center;
+}
+
 /* Mobile responsive */
 @media (max-width: 768px) {
   .hero {
@@ -380,5 +480,10 @@ select {
 
   .teams-grid {
     grid-template-columns: 1fr;
+  }
+
+  .attendee-table th,
+  .attendee-table td {
+    padding: 10px 8px;
   }
 }
