@@ -8,10 +8,13 @@ const winningTeamVerb = document.getElementById("winningTeamVerb");
 const attendeeList = document.getElementById("attendeeList");
 const attendeeListCount = document.getElementById("attendeeListCount");
 const attendeeCountDisplay = document.getElementById("attendeeCount");
+const attendanceGoalDisplay = document.getElementById("attendanceGoal");
 const attendanceProgress = document.getElementById("attendanceProgress");
 const progressBar = document.getElementById("progressBar");
+const adjustGoalButton = document.getElementById("adjustGoalBtn");
+const resetAttendanceButton = document.getElementById("resetAttendanceBtn");
 
-const maxAttendees = 50;
+let maxAttendees = 50;
 const storageKey = "intelSummitAttendance";
 const teamNames = {
   water: "Team Water Wise",
@@ -31,7 +34,9 @@ function updateAttendanceDisplay() {
   const progress = Math.min((attendeeCount / maxAttendees) * 100, 100);
 
   attendeeCountDisplay.textContent = attendeeCount;
+  attendanceGoalDisplay.textContent = maxAttendees;
   progressBar.style.width = `${progress}%`;
+  attendanceProgress.setAttribute("aria-valuemax", maxAttendees);
   attendanceProgress.setAttribute(
     "aria-valuenow",
     Math.min(attendeeCount, maxAttendees),
@@ -120,6 +125,7 @@ function renderAttendeeList() {
 function saveAttendance() {
   const attendanceData = {
     attendeeCount: attendeeCount,
+    maxAttendees: maxAttendees,
     teamCounts: teamCounts,
     attendees: attendees,
   };
@@ -154,6 +160,12 @@ function loadAttendance() {
         Number.isInteger(savedTeamCounts.power)
       ) {
         attendeeCount = attendanceData.attendeeCount;
+        if (
+          Number.isInteger(attendanceData.maxAttendees) &&
+          attendanceData.maxAttendees > 0
+        ) {
+          maxAttendees = attendanceData.maxAttendees;
+        }
         teamCounts.water = savedTeamCounts.water;
         teamCounts.zero = savedTeamCounts.zero;
         teamCounts.power = savedTeamCounts.power;
@@ -195,6 +207,93 @@ function loadAttendance() {
   }
 }
 
+function verifyAdminPassword() {
+  const password = window.prompt("Enter the password to continue:");
+
+  if (password === "intel") {
+    return true;
+  }
+
+  if (password !== null) {
+    window.alert("Incorrect password.");
+  }
+
+  return false;
+}
+
+function adjustAttendanceGoal() {
+  if (!verifyAdminPassword()) {
+    return;
+  }
+
+  const goalInput = window.prompt(
+    "Enter the new attendance goal:",
+    maxAttendees,
+  );
+
+  if (goalInput === null) {
+    return;
+  }
+
+  const newGoal = Number(goalInput);
+
+  if (!Number.isInteger(newGoal) || newGoal < 1) {
+    window.alert("Enter a whole number greater than 0.");
+    return;
+  }
+
+  maxAttendees = newGoal;
+  updateAttendanceDisplay();
+
+  if (attendeeCount >= maxAttendees) {
+    showGoalCelebration();
+  } else {
+    celebrationMessage.hidden = true;
+    winningTeam.textContent = "";
+    winningTeamVerb.textContent = "is the winning team!";
+  }
+
+  const attendanceSaved = saveAttendance();
+  greeting.textContent = attendanceSaved
+    ? `Attendance goal updated to ${maxAttendees}.`
+    : "Goal updated, but could not be saved by your browser.";
+  greeting.className = "success-message";
+  greeting.style.display = "block";
+}
+
+function resetAttendance() {
+  if (!verifyAdminPassword()) {
+    return;
+  }
+
+  if (!window.confirm("Reset all attendee names and team counts?")) {
+    return;
+  }
+
+  attendeeCount = 0;
+  teamCounts.water = 0;
+  teamCounts.zero = 0;
+  teamCounts.power = 0;
+  attendees.length = 0;
+
+  updateAttendanceDisplay();
+  document.getElementById("waterCount").textContent = teamCounts.water;
+  document.getElementById("zeroCount").textContent = teamCounts.zero;
+  document.getElementById("powerCount").textContent = teamCounts.power;
+  renderAttendeeList();
+
+  celebrationMessage.hidden = true;
+  winningTeam.textContent = "";
+  winningTeamVerb.textContent = "is the winning team!";
+
+  const attendanceSaved = saveAttendance();
+  greeting.textContent = attendanceSaved
+    ? "Attendance has been reset."
+    : "Attendance was reset, but could not be saved by your browser.";
+  greeting.className = "success-message";
+  greeting.style.display = "block";
+}
+
 checkInForm.addEventListener("submit", function (event) {
   event.preventDefault();
 
@@ -234,3 +333,6 @@ checkInForm.addEventListener("submit", function (event) {
 });
 
 loadAttendance();
+
+adjustGoalButton.addEventListener("click", adjustAttendanceGoal);
+resetAttendanceButton.addEventListener("click", resetAttendance);

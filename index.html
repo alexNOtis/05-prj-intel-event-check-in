@@ -28,7 +28,8 @@
     <div class="attendance-tracker">
       <div class="attendance-header">
         <i class="fas fa-users"></i>
-        Attendance: <span id="attendeeCount">0</span> of 50 Attendees
+        Attendance: <span id="attendeeCount">0</span> of
+        <span id="attendanceGoal">50</span> Attendees
       </div>
       <div
         id="attendanceProgress"
@@ -135,6 +136,27 @@
         >Sustainability Goals</a
       >
     </footer>
+
+    <div class="admin-actions" aria-label="Attendance controls">
+      <button
+        type="button"
+        id="adjustGoalBtn"
+        class="admin-action"
+        title="Adjust attendance goal"
+      >
+        <i class="fas fa-bullseye" aria-hidden="true"></i>
+        <span>Adjust Goal</span>
+      </button>
+      <button
+        type="button"
+        id="resetAttendanceBtn"
+        class="admin-action"
+        title="Reset current attendance"
+      >
+        <i class="fas fa-rotate-left" aria-hidden="true"></i>
+        <span>Reset Counts</span>
+      </button>
+    </div>
 
     <script src="script.js"></script>
   </body>

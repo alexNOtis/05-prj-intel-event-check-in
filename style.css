@@ -304,6 +304,30 @@ button .fas {
   text-decoration: underline;
 }
 
+.admin-actions {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 10;
+  display: flex;
+  gap: 10px;
+}
+
+.admin-action {
+  width: auto;
+  min-width: 0;
+  height: 46px;
+  padding: 0 16px;
+  border-radius: 8px;
+  background-color: #334155;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.admin-action:hover {
+  background-color: #1e293b;
+}
+
 /* Input wrapper for name and team select */
 .input-wrapper {
   flex: 1;
@@ -485,5 +509,17 @@ select {
   .attendee-table th,
   .attendee-table td {
     padding: 10px 8px;
+  }
+
+  .admin-actions {
+    right: 10px;
+    bottom: 10px;
+    gap: 8px;
+  }
+
+  .admin-action {
+    height: 44px;
+    padding: 0 12px;
+    font-size: 13px;
   }
 }
