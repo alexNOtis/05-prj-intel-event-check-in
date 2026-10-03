@@ -124,11 +124,22 @@ function saveAttendance() {
     attendees: attendees,
   };
 
-  localStorage.setItem(storageKey, JSON.stringify(attendanceData));
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(attendanceData));
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 function loadAttendance() {
-  const savedAttendance = localStorage.getItem(storageKey);
+  let savedAttendance = null;
+
+  try {
+    savedAttendance = localStorage.getItem(storageKey);
+  } catch (error) {
+    savedAttendance = null;
+  }
 
   if (savedAttendance !== null) {
     try {
@@ -203,13 +214,18 @@ checkInForm.addEventListener("submit", function (event) {
     team: selectedTeam,
   });
   renderAttendeeList();
-  saveAttendance();
+  const attendanceSaved = saveAttendance();
 
   if (attendeeCount === maxAttendees) {
     showGoalCelebration();
   }
 
-  greeting.textContent = `Welcome, ${attendeeName}! We're glad you're joining ${teamNames[selectedTeam]}.`;
+  const welcomeMessage = `Welcome, ${attendeeName}! We're glad you're joining ${teamNames[selectedTeam]}.`;
+  if (attendanceSaved) {
+    greeting.textContent = welcomeMessage;
+  } else {
+    greeting.textContent = `${welcomeMessage} This check-in could not be saved by your browser.`;
+  }
   greeting.className = "success-message";
   greeting.style.display = "block";
 
