@@ -158,6 +158,65 @@
       </button>
     </div>
 
+    <div id="adminModal" class="admin-modal" hidden>
+      <section
+        class="admin-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="adminDialogTitle"
+        aria-describedby="adminDialogMessage"
+      >
+        <div class="admin-dialog-header">
+          <h2 id="adminDialogTitle"></h2>
+          <button
+            type="button"
+            id="closeAdminDialogBtn"
+            class="admin-dialog-close"
+            aria-label="Close dialog"
+            title="Close"
+          >
+            <i class="fas fa-xmark" aria-hidden="true"></i>
+          </button>
+        </div>
+        <p id="adminDialogMessage"></p>
+        <form id="adminDialogForm" class="admin-dialog-form">
+          <label for="adminPasswordInput">Password</label>
+          <input
+            type="password"
+            id="adminPasswordInput"
+            name="adminPassword"
+            autocomplete="current-password"
+            required
+          />
+          <div id="attendanceGoalField">
+            <label for="newAttendanceGoal">New attendance goal</label>
+            <input
+              type="number"
+              id="newAttendanceGoal"
+              name="newAttendanceGoal"
+              min="1"
+              step="1"
+            />
+          </div>
+          <label id="resetConfirmationField" class="reset-confirmation" hidden>
+            <input type="checkbox" id="confirmAttendanceReset" />
+            <span>Confirm clearing all attendee names and team counts</span>
+          </label>
+          <p id="adminDialogError" class="admin-dialog-error" role="alert"></p>
+          <div class="admin-dialog-actions">
+            <button
+              type="button"
+              id="cancelAdminDialogBtn"
+              class="admin-dialog-cancel"
+            >
+              Cancel
+            </button>
+            <button type="submit" id="submitAdminActionBtn">Continue</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
     <script src="script.js"></script>
   </body>
 </html>

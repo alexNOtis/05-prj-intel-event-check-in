@@ -13,6 +13,22 @@ const attendanceProgress = document.getElementById("attendanceProgress");
 const progressBar = document.getElementById("progressBar");
 const adjustGoalButton = document.getElementById("adjustGoalBtn");
 const resetAttendanceButton = document.getElementById("resetAttendanceBtn");
+const adminModal = document.getElementById("adminModal");
+const adminDialogForm = document.getElementById("adminDialogForm");
+const adminDialogTitle = document.getElementById("adminDialogTitle");
+const adminDialogMessage = document.getElementById("adminDialogMessage");
+const adminPasswordInput = document.getElementById("adminPasswordInput");
+const attendanceGoalField = document.getElementById("attendanceGoalField");
+const newAttendanceGoalInput = document.getElementById("newAttendanceGoal");
+const resetConfirmationField = document.getElementById(
+  "resetConfirmationField",
+);
+const confirmAttendanceReset = document.getElementById(
+  "confirmAttendanceReset",
+);
+const adminDialogError = document.getElementById("adminDialogError");
+const closeAdminDialogButton = document.getElementById("closeAdminDialogBtn");
+const cancelAdminDialogButton = document.getElementById("cancelAdminDialogBtn");
 
 let maxAttendees = 50;
 const storageKey = "intelSummitAttendance";
@@ -29,6 +45,7 @@ const teamCounts = {
 const attendees = [];
 
 let attendeeCount = 0;
+let activeAdminAction = "goal";
 
 function updateAttendanceDisplay() {
   const progress = Math.min((attendeeCount / maxAttendees) * 100, 100);
@@ -207,41 +224,7 @@ function loadAttendance() {
   }
 }
 
-function verifyAdminPassword() {
-  const password = window.prompt("Enter the password to continue:");
-
-  if (password === "intel") {
-    return true;
-  }
-
-  if (password !== null) {
-    window.alert("Incorrect password.");
-  }
-
-  return false;
-}
-
-function adjustAttendanceGoal() {
-  if (!verifyAdminPassword()) {
-    return;
-  }
-
-  const goalInput = window.prompt(
-    "Enter the new attendance goal:",
-    maxAttendees,
-  );
-
-  if (goalInput === null) {
-    return;
-  }
-
-  const newGoal = Number(goalInput);
-
-  if (!Number.isInteger(newGoal) || newGoal < 1) {
-    window.alert("Enter a whole number greater than 0.");
-    return;
-  }
-
+function updateAttendanceGoal(newGoal) {
   maxAttendees = newGoal;
   updateAttendanceDisplay();
 
@@ -262,14 +245,6 @@ function adjustAttendanceGoal() {
 }
 
 function resetAttendance() {
-  if (!verifyAdminPassword()) {
-    return;
-  }
-
-  if (!window.confirm("Reset all attendee names and team counts?")) {
-    return;
-  }
-
   attendeeCount = 0;
   teamCounts.water = 0;
   teamCounts.zero = 0;
@@ -292,6 +267,73 @@ function resetAttendance() {
     : "Attendance was reset, but could not be saved by your browser.";
   greeting.className = "success-message";
   greeting.style.display = "block";
+}
+
+function openAdminDialog(action) {
+  activeAdminAction = action;
+  adminPasswordInput.value = "";
+  adminDialogError.textContent = "";
+  confirmAttendanceReset.checked = false;
+
+  if (action === "goal") {
+    adminDialogTitle.textContent = "Adjust attendance goal";
+    adminDialogMessage.textContent =
+      "Enter the password and choose a new whole-number goal.";
+    attendanceGoalField.hidden = false;
+    resetConfirmationField.hidden = true;
+    newAttendanceGoalInput.value = maxAttendees;
+  } else {
+    adminDialogTitle.textContent = "Reset attendance";
+    adminDialogMessage.textContent =
+      "Enter the password and confirm that you want to clear all attendance.";
+    attendanceGoalField.hidden = true;
+    resetConfirmationField.hidden = false;
+  }
+
+  adminModal.hidden = false;
+  adminPasswordInput.focus();
+}
+
+function closeAdminDialog() {
+  adminModal.hidden = true;
+
+  if (activeAdminAction === "goal") {
+    adjustGoalButton.focus();
+  } else {
+    resetAttendanceButton.focus();
+  }
+}
+
+function submitAdminAction(event) {
+  event.preventDefault();
+
+  if (adminPasswordInput.value !== "intel") {
+    adminDialogError.textContent = "Incorrect password.";
+    adminPasswordInput.focus();
+    return;
+  }
+
+  if (activeAdminAction === "goal") {
+    const newGoal = Number(newAttendanceGoalInput.value);
+
+    if (!Number.isInteger(newGoal) || newGoal < 1) {
+      adminDialogError.textContent = "Enter a whole number greater than 0.";
+      newAttendanceGoalInput.focus();
+      return;
+    }
+
+    updateAttendanceGoal(newGoal);
+  } else {
+    if (!confirmAttendanceReset.checked) {
+      adminDialogError.textContent =
+        "Check the box to confirm resetting attendance.";
+      return;
+    }
+
+    resetAttendance();
+  }
+
+  closeAdminDialog();
 }
 
 checkInForm.addEventListener("submit", function (event) {
@@ -332,7 +374,24 @@ checkInForm.addEventListener("submit", function (event) {
   attendeeNameInput.focus();
 });
 
-loadAttendance();
+adjustGoalButton.addEventListener("click", function () {
+  openAdminDialog("goal");
+});
+resetAttendanceButton.addEventListener("click", function () {
+  openAdminDialog("reset");
+});
+adminDialogForm.addEventListener("submit", submitAdminAction);
+closeAdminDialogButton.addEventListener("click", closeAdminDialog);
+cancelAdminDialogButton.addEventListener("click", closeAdminDialog);
+adminModal.addEventListener("click", function (event) {
+  if (event.target === adminModal) {
+    closeAdminDialog();
+  }
+});
+document.addEventListener("keydown", function (event) {
+  if (event.key === "Escape" && !adminModal.hidden) {
+    closeAdminDialog();
+  }
+});
 
-adjustGoalButton.addEventListener("click", adjustAttendanceGoal);
-resetAttendanceButton.addEventListener("click", resetAttendance);
+loadAttendance();

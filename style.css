@@ -328,6 +328,152 @@ button .fas {
   background-color: #1e293b;
 }
 
+.admin-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: rgba(15, 23, 42, 0.58);
+}
+
+.admin-modal[hidden] {
+  display: none;
+}
+
+.admin-dialog {
+  width: min(100%, 420px);
+  padding: 24px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.28);
+  text-align: left;
+}
+
+.admin-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.admin-dialog-header h2 {
+  color: #334155;
+  font-size: 21px;
+}
+
+.admin-dialog-close {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 6px;
+  background-color: transparent;
+  box-shadow: none;
+  color: #475569;
+}
+
+.admin-dialog-close:hover {
+  transform: none;
+  background-color: #f1f5f9;
+  box-shadow: none;
+}
+
+.admin-dialog-close .fas {
+  margin: 0;
+}
+
+#adminDialogMessage {
+  margin-bottom: 18px;
+  color: #64748b;
+  font-size: 15px;
+}
+
+.admin-dialog-form {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-dialog-form > label,
+.admin-dialog-form #attendanceGoalField > label {
+  color: #475569;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.admin-dialog-form input[type="password"],
+.admin-dialog-form input[type="number"] {
+  width: 100%;
+  min-height: 48px;
+  margin-bottom: 8px;
+}
+
+#attendanceGoalField[hidden],
+#resetConfirmationField[hidden] {
+  display: none;
+}
+
+.reset-confirmation {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 4px 0;
+}
+
+.reset-confirmation input {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin: 3px 0 0;
+}
+
+.reset-confirmation span {
+  color: #475569;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.admin-dialog-error {
+  min-height: 0;
+  color: #b42318;
+  font-size: 14px;
+}
+
+.admin-dialog-error:not(:empty) {
+  min-height: 22px;
+}
+
+.admin-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.admin-dialog-actions button {
+  width: auto;
+  min-width: 100px;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.admin-dialog-actions .admin-dialog-cancel {
+  background-color: #e2e8f0;
+  box-shadow: none;
+  color: #334155;
+}
+
+.admin-dialog-actions .admin-dialog-cancel:hover {
+  transform: none;
+  background-color: #cbd5e1;
+  box-shadow: none;
+}
+
 /* Input wrapper for name and team select */
 .input-wrapper {
   flex: 1;
